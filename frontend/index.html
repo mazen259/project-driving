@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>مساعد تعليم السواقة</title>
+<style>
+  :root {
+    --bg: #0e1116;
+    --panel: #161a22;
+    --panel-2: #1e2430;
+    --border: #2a3140;
+    --text: #e7ebf3;
+    --muted: #8b93a7;
+    --accent: #4f8cff;
+    --accent-2: #35d1a1;
+    --user-bubble: #2a3245;
+    --bot-bubble: #182033;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    background: radial-gradient(1200px 600px at 80% -10%, #17233a 0%, var(--bg) 55%);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(22,26,34,0.7);
+    backdrop-filter: blur(6px);
+  }
+  header .logo {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  header h1 { font-size: 17px; margin: 0; }
+  header p { margin: 0; font-size: 12px; color: var(--muted); }
+
+  .layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 0;
+  }
+  aside {
+    border-left: 1px solid var(--border);
+    padding: 18px;
+    overflow-y: auto;
+    background: rgba(20,24,32,0.5);
+  }
+  aside h2 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin: 18px 0 8px;
+  }
+  .chip {
+    display: inline-block;
+    padding: 7px 12px;
+    margin: 4px 4px 0 0;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: 0.15s;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  #messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .msg { max-width: 72%; padding: 12px 16px; border-radius: 14px; line-height: 1.7; font-size: 14.5px; white-space: pre-wrap; }
+  .msg.user { align-self: flex-end; background: var(--user-bubble); border-bottom-left-radius: 4px; }
+  .msg.bot { align-self: flex-start; background: var(--bot-bubble); border: 1px solid var(--border); border-bottom-right-radius: 4px; }
+  .msg.bot.error { border-color: #7a2f2f; background: #2a1717; }
+
+  .sources { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .source-card {
+    font-size: 12px;
+    color: var(--muted);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  .source-tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    margin-left: 6px;
+    background: var(--panel-2);
+    color: var(--accent-2);
+  }
+
+  form#composer {
+    display: flex;
+    gap: 10px;
+    padding: 16px 24px 22px;
+    border-top: 1px solid var(--border);
+  }
+  #input {
+    flex: 1;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 13px 16px;
+    font-size: 14.5px;
+    outline: none;
+  }
+  #input:focus { border-color: var(--accent); }
+  button#send {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    padding: 0 22px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  button#send:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .typing { display: flex; gap: 4px; padding: 6px 0; }
+  .typing span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--muted);
+    animation: blink 1.2s infinite ease-in-out;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
+
+  @media (max-width: 780px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🚗</div>
+  <div>
+    <h1>مساعد تعليم السواقة</h1>
+    <p>رخص القيادة · مدارس ومدربين · صيانة السيارات — مدعوم بـ RAG وGemini</p>
+  </div>
+</header>
+
+<div class="layout">
+  <aside>
+    <h2>أسئلة سريعة</h2>
+    <span class="chip">إيه شروط استخراج رخصة قيادة أول مرة؟</span>
+    <span class="chip">إيه هي خطوات الاختبار العملي؟</span>
+    <span class="chip">فيه مدرب سواقة في الهرم؟</span>
+    <span class="chip">سعر تغيير زيت المحرك لسيارة 1600 في القاهرة؟</span>
+    <span class="chip">لو رسبت في الاختبار، أعيده امتى؟</span>
+
+    <h2>عن المشروع</h2>
+    <p style="font-size:12.5px; color:var(--muted); line-height:1.8;">
+      هذا المساعد يبحث في قاعدة معرفة تضم إجراءات الرخصة، بيانات مدارس
+      السواقة، وأسعار الصيانة، ثم يستخدم Gemini لصياغة إجابة دقيقة بناءً
+      على البيانات المسترجعة فقط.
+    </p>
+  </aside>
+
+  <main>
+    <div id="messages">
+      <div class="msg bot">
+        أهلاً! أنا مساعدك في كل ما يخص تعليم السواقة في مصر: شروط الرخصة،
+        إجراءات الاختبار، أرقام مدربين السواقة، وأسعار صيانة السيارات.
+        اسألني أي سؤال 🚦
+      </div>
+    </div>
+    <form id="composer">
+      <input id="input" type="text" placeholder="اكتب سؤالك هنا..." autocomplete="off" />
+      <button id="send" type="submit">إرسال</button>
+    </form>
+  </main>
+</div>
+
+<script>
+  // If the frontend is served by the same FastAPI app, "" (relative)
+  // works. If you serve the frontend separately, set the full backend
+  // URL here, e.g. "http://localhost:8000".
+  const API_BASE = "";
+
+  const messagesEl = document.getElementById("messages");
+  const form = document.getElementById("composer");
+  const input = document.getElementById("input");
+  const sendBtn = document.getElementById("send");
+
+  function addMessage(text, role, sources) {
+    const div = document.createElement("div");
+    div.className = "msg " + role;
+    div.textContent = text;
+
+    if (sources && sources.length) {
+      const wrap = document.createElement("div");
+      wrap.className = "sources";
+      sources.slice(0, 4).forEach(s => {
+        const card = document.createElement("div");
+        card.className = "source-card";
+        const label = { license: "إجراء رسمي", school: "مدرسة سواقة", maintenance: "صيانة" }[s.type] || s.type;
+        card.innerHTML = `<span class="source-tag">${label}</span>${s.text}`;
+        wrap.appendChild(card);
+      });
+      div.appendChild(wrap);
+    }
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function addTyping() {
+    const div = document.createElement("div");
+    div.className = "msg bot";
+    div.id = "typing-indicator";
+    div.innerHTML = `<div class="typing"><span></span><span></span><span></span></div>`;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function removeTyping() {
+    const el = document.getElementById("typing-indicator");
+    if (el) el.remove();
+  }
+
+  async function sendMessage(text) {
+    addMessage(text, "user");
+    input.value = "";
+    sendBtn.disabled = true;
+    addTyping();
+
+    try {
+      const res = await fetch(`${API_BASE}/api/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text }),
+      });
+      const data = await res.json();
+      removeTyping();
+
+      if (!res.ok) {
+        addMessage(data.detail || "حدث خطأ أثناء الاتصال بالخادم.", "bot error");
+      } else {
+        addMessage(data.answer, "bot", data.sources);
+      }
+    } catch (err) {
+      removeTyping();
+      addMessage("تعذّر الاتصال بالخادم. تأكد أن الـ backend شغال.", "bot error");
+    } finally {
+      sendBtn.disabled = false;
+    }
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (text) sendMessage(text);
+  });
+
+  document.querySelectorAll(".chip").forEach(chip => {
+    chip.addEventListener("click", () => sendMessage(chip.textContent));
+  });
+</script>
+
+</body>
+</html>
