@@ -13,6 +13,12 @@ Then open http://localhost:8000 in the browser.
 from pathlib import Path
 from typing import Optional
 
+from dotenv import load_dotenv
+
+# Load variables from backend/.env before anything else needs them
+# (must happen before importing llm_client, which reads GROQ_API_KEY).
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -22,7 +28,7 @@ from pydantic import BaseModel
 from .rag import get_index
 from .llm_client import generate_answer
 
-app = FastAPI(title="Driving School RAG Assistant", version="1.0.0")
+app = FastAPI(title="Driving School RAG Assistant", version="2.0.0")
 
 # Allow the frontend (served from anywhere, including a different port
 # during development) to call this API.
@@ -39,8 +45,14 @@ FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend"
 
 # ---------- request / response models ----------
 
+class HistoryTurn(BaseModel):
+    role: str  # "user" | "assistant"
+    content: str
+
+
 class ChatRequest(BaseModel):
     message: str
+    history: list[HistoryTurn] = []
 
 
 class ChatSource(BaseModel):
@@ -72,10 +84,12 @@ def chat(req: ChatRequest):
         raise HTTPException(status_code=400, detail="message is empty")
 
     idx = get_index()
-    chunks = idx.search(req.message, top_k=6)
+    chunks = idx.search(req.message, top_k=8)
+
+    history = [{"role": t.role, "content": t.content} for t in req.history]
 
     try:
-        answer = generate_answer(req.message, chunks)
+        answer = generate_answer(req.message, chunks, history=history)
     except RuntimeError as e:
         # Most likely: GROQ_API_KEY missing. Return retrieved context
         # anyway so the frontend/dev can still see the RAG step working.
@@ -99,6 +113,19 @@ def maintenance(engine_cc: str = "", service_type: str = "", city: str = ""):
         engine_cc=engine_cc, service_type=service_type, city=city
     )
     return [r.__dict__ for r in results]
+
+
+@app.get("/api/filters")
+def filters():
+    """Distinct values to populate dropdown filters in the frontend."""
+    idx = get_index()
+    return {
+        "areas": idx.distinct_areas(),
+        "governorates": idx.distinct_governorates(),
+        "engine_ccs": idx.distinct_engine_ccs(),
+        "service_types": idx.distinct_service_types(),
+        "cities": idx.distinct_cities(),
+    }
 
 
 # ---------- serve the frontend ----------
