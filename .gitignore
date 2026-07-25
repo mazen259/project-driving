@@ -1,0 +1,39 @@
+# ==== Python ====
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+.Python
+build/
+dist/
+
+# بيئة بايثون الافتراضية — كل واحد بيعملها عنده بـ:
+#   python -m venv venv && pip install -r backend/requirements.txt
+venv/
+.venv/
+env/
+ENV/
+
+# ==== أسرار / إعدادات محلية ====
+# فيها GROQ_API_KEY وغيره — متتشاركش أبدًا على جيت.
+.env
+*.env
+!.env.example
+
+# ==== كاش الـ embeddings ====
+# بيتولد تلقائيًا أول مرة يشتغل فيها السيرفر بـ RETRIEVAL_BACKEND=embeddings
+# (شوف backend/app/embedder.py). مش لازم يترفع على جيت لأنه:
+#   1) بيتبني لوحده من الداتا، مفيش داعي نكرره في الريبو.
+#   2) لو الداتا اتغيّرت، الكاش القديم أصلاً بيبقى غير صالح ومنساش يتحدث.
+# لو محتاج تنقل الكاش الجاهز مع الديبلوي (مثلاً السيرفر مفيهوش إنترنت
+# ينزّل الموديل منه) امسح السطر ده وارفعه يدويًا مرة واحدة بس.
+backend/app/.cache/
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+
+# ==== Node (لو الفرونت اتحول لبناء عن طريق npm/vite لاحقًا) ====
+node_modules/
