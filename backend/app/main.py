@@ -28,8 +28,20 @@ from pydantic import BaseModel
 from .rag import get_index
 from .llm_client import generate_answer
 
-app = FastAPI(title="Driving School RAG Assistant", version="2.0.0")
+from contextlib import asynccontextmanager
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Building RAG index...")
+    get_index()          # هيبني الـ Embeddings مرة واحدة عند تشغيل السيرفر
+    print("RAG index ready.")
+    yield
+
+app = FastAPI(
+    title="Driving School RAG Assistant",
+    version="2.0.0",
+    lifespan=lifespan,
+)
 # Allow the frontend (served from anywhere, including a different port
 # during development) to call this API.
 app.add_middleware(

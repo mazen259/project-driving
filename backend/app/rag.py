@@ -13,6 +13,17 @@ Improvements over v1:
     that contain that exact value get a relevance boost on top of the
     TF-IDF score. This fixes cases where a common number/place name
     has low IDF weight and would otherwise rank lower than it should.
+  - Domain routing: a small keyword-based classifier guesses whether
+    the question is about "maintenance", "school" or "license" BEFORE
+    TF-IDF runs, and search is restricted to that subset of chunks.
+    Plain TF-IDF over the whole mixed corpus tends to let a place name
+    or a generic word (e.g. "كابتن") from one domain leak into an
+    unrelated domain's results (a maintenance question returning
+    driving schools, etc.) — routing fixes that class of bug.
+  - Real relevance threshold: results are dropped if their score is
+    too low in absolute terms, or too far below the best match, so a
+    weak/irrelevant chunk never gets forwarded to the LLM just to fill
+    up top_k.
 
 The index still mixes three kinds of documents:
   - license procedure docs   (type="license")
@@ -22,12 +33,13 @@ The index still mixes three kinds of documents:
 
 import re
 from dataclasses import dataclass
-from typing import List, Optional, Set
+from typing import Dict, List, Optional, Set
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from .data_loader import parse_all_data, School, MaintenanceRow, LicenseDoc
+from . import embedder
 
 # ---------------------------------------------------------------
 # Arabic normalization
@@ -103,6 +115,18 @@ class RagIndex:
         )
         self.matrix = self.vectorizer.fit_transform(texts)
 
+        # Embedding backend is opt-in via RETRIEVAL_BACKEND=embeddings in
+        # .env. When on, chunk embeddings are computed once and cached to
+        # disk (see embedder.py) so restarting the server doesn't redo
+        # the (slow, model-download-requiring) embedding step every time.
+        self.embedding_matrix = None
+        if embedder.RETRIEVAL_BACKEND == "embeddings":
+            # Embed the ORIGINAL (non-normalized) text: embedding models
+            # are already robust to diacritics/letter variants, unlike
+            # TF-IDF, so we don't need our manual Arabic normalization here.
+            raw_texts = [c.text for c in self.chunks]
+            self.embedding_matrix = embedder.embed_texts(raw_texts)
+
     def _hybrid_boost(self, query_norm: str, chunk: Chunk, base_score: float) -> float:
         """Boost chunks that contain an exact engine size or place name
         mentioned in the query — these are strong, unambiguous signals
@@ -122,8 +146,13 @@ class RagIndex:
         if not query.strip():
             return []
         query_norm = normalize_arabic(query)
-        q_vec = self.vectorizer.transform([query_norm])
-        sims = cosine_similarity(q_vec, self.matrix)[0]
+
+        if self.embedding_matrix is not None:
+            q_vec = embedder.embed_query(query)
+            sims = cosine_similarity(q_vec, self.embedding_matrix)[0]
+        else:
+            q_vec = self.vectorizer.transform([query_norm])
+            sims = cosine_similarity(q_vec, self.matrix)[0]
 
         boosted = [
             self._hybrid_boost(query_norm, self.chunks[i], sims[i])
