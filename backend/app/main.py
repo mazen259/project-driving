@@ -33,7 +33,7 @@ from contextlib import asynccontextmanager
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("Building RAG index...")
-    get_index()          # هيبني الـ Embeddings مرة واحدة عند تشغيل السيرفر
+    get_index()          # Build embeddings once when the server starts
     print("RAG index ready.")
     yield
 
