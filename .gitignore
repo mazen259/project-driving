@@ -1,30 +1,30 @@
 # ==== Python ====
-__pycache__/
-*.py[cod]
+backend\app\__pycache__*.py[cod]
 *.egg-info/
 *.egg
 .Python
 build/
 dist/
-Python virtualenv directories — each developer can create their own:
+
+# بيئة بايثون الافتراضية — كل واحد بيعملها عنده بـ:
 #   python -m venv venv && pip install -r backend/requirements.txt
 venv/
 .venv/
 env/
 ENV/
 
-# ==== Secrets / local settings ====
-# Contains GROQ_API_KEY and other local secrets. Do not commit.
+# ==== أسرار / إعدادات محلية ====
+# فيها GROQ_API_KEY وغيره — متتشاركش أبدًا على جيت.
 .env
 *.env
 !.env.example
 
-# ==== IDE / operating system ====
+# ==== IDE / نظام تشغيل ====
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
 *.log
 
-# ==== Node (if frontend later uses npm/vite
+# ==== Node (لو الفرونت اتحول لبناء عن طريق npm/vite لاحقًا) ====
 node_modules/

@@ -4,6 +4,9 @@ pydantic>=2.6.0
 scikit-learn>=1.4.0
 groq>=0.11.0
 python-dotenv>=1.0.0
-
+python-multipart>=0.0.9
 
 sentence-transformers>=3.0.0
+
+# تحويل الصوت لنص (endpoint: /api/chat/voice)
+faster-whisper>=1.0.0

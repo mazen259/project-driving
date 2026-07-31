@@ -53,16 +53,12 @@ CACHE_DIR = Path(
 )
 FORCE_REEMBED = os.getenv("FORCE_REEMBED", "false").strip().lower() in ("1", "true", "yes")
 
-# Ensure the cache folder exists before writing embedding files.
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
-# Lazy-loaded SentenceTransformer model instance.
-_model = None  # only created when the embeddings backend is used
+_model = None  # lazy-loaded SentenceTransformer, only if backend == "embeddings"
 
 
 def _data_fingerprint(texts: List[str], model_name: str) -> str:
-    # Create a stable fingerprint for the current data and model.
-    # If the text or model changes, the fingerprint changes too.
     h = hashlib.sha256()
     for t in texts:
         h.update(t.encode("utf-8"))
@@ -72,7 +68,6 @@ def _data_fingerprint(texts: List[str], model_name: str) -> str:
 
 
 def _cache_paths(fingerprint: str):
-    # Map the fingerprint to cache file paths for vectors and metadata.
     return (
         CACHE_DIR / f"embeddings_{fingerprint}.npy",
         CACHE_DIR / f"embeddings_{fingerprint}.meta.json",
@@ -122,7 +117,6 @@ def embed_texts(texts: List[str], _encode_fn=None) -> np.ndarray:
         except Exception:
             pass  # corrupted/partial cache -> fall through and rebuild
 
-    # Compute and cache embeddings when no valid cache exists.
     matrix = encode_fn(texts)
     np.save(npy_path, matrix)
     meta_path.write_text(
@@ -135,8 +129,8 @@ def embed_texts(texts: List[str], _encode_fn=None) -> np.ndarray:
 
 
 def embed_query(query: str) -> np.ndarray:
-    # Embed a single query string with the same model and normalization.
-    # This is used at runtime to compare user questions against cached chunks.
+    """Embed a single query string the same way chunks were embedded
+    (no caching needed here — it's one short string per request)."""
     model = _get_model()
     vec = model.encode([query], normalize_embeddings=True)
     return np.asarray(vec, dtype="float32")

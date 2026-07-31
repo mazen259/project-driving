@@ -10,6 +10,9 @@ Run with:
 Then open http://localhost:8000 in the browser.
 """
 
+import json
+import os
+import tempfile
 from pathlib import Path
 from typing import Optional
 
@@ -19,7 +22,7 @@ from dotenv import load_dotenv
 # (must happen before importing llm_client, which reads GROQ_API_KEY).
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -27,13 +30,14 @@ from pydantic import BaseModel
 
 from .rag import get_index
 from .llm_client import generate_answer
+from .stt_client import transcribe_audio
 
 from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("Building RAG index...")
-    get_index()          # Build embeddings once when the server starts
+    get_index()          # هيبني الـ Embeddings مرة واحدة عند تشغيل السيرفر
     print("RAG index ready.")
     yield
 
@@ -77,6 +81,32 @@ class ChatResponse(BaseModel):
     sources: list[ChatSource]
 
 
+class VoiceChatResponse(ChatResponse):
+    transcript: str  # النص اللي طلع من الملف الصوتي (عشان تعرضه في الواجهة)
+
+
+# ---------- shared chat logic (used by /api/chat and /api/chat/voice) ----------
+
+def _run_chat(message: str, history: list[HistoryTurn]) -> ChatResponse:
+    if not message.strip():
+        raise HTTPException(status_code=400, detail="message is empty")
+
+    idx = get_index()
+    chunks = idx.search(message, top_k=8)
+
+    history_dicts = [{"role": t.role, "content": t.content} for t in history]
+
+    try:
+        answer = generate_answer(message, chunks, history=history_dicts)
+    except RuntimeError as e:
+        # Most likely: GROQ_API_KEY missing. Return retrieved context
+        # anyway so the frontend/dev can still see the RAG step working.
+        raise HTTPException(status_code=500, detail=str(e))
+
+    sources = [ChatSource(type=c.doc_type, text=c.text) for c in chunks]
+    return ChatResponse(answer=answer, sources=sources)
+
+
 # ---------- API routes ----------
 
 @app.get("/api/health")
@@ -92,23 +122,59 @@ def health():
 
 @app.post("/api/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
-    if not req.message.strip():
-        raise HTTPException(status_code=400, detail="message is empty")
+    return _run_chat(req.message, req.history)
 
-    idx = get_index()
-    chunks = idx.search(req.message, top_k=8)
 
-    history = [{"role": t.role, "content": t.content} for t in req.history]
+@app.post("/api/chat/voice", response_model=VoiceChatResponse)
+async def chat_voice(
+    file: UploadFile = File(...),
+    history: str = Form("[]"),
+):
+    """
+    بيستقبل ملف صوتي (رسالة صوتية من المستخدم)، يحوّله لنص باستخدام
+    faster-whisper (محليًا، من غير API خارجي)، وبعدين يمرر النص الناتج
+    لنفس الـ RAG + LLM pipeline بتاع /api/chat عشان يرجع رد نصي.
 
+    history: نفس شكل history في /api/chat، لكن مبعوتة كـ JSON string
+    جوه الـ form (زي [{"role": "user", "content": "..."}]) لأن
+    الطلب multipart/form-data مش JSON body عادي.
+    """
+    # 1) نحفظ الملف الصوتي مؤقتًا على الديسك عشان faster-whisper يقدر يقرأه
+    suffix = Path(file.filename or "").suffix or ".wav"
+    tmp_path: Optional[str] = None
     try:
-        answer = generate_answer(req.message, chunks, history=history)
-    except RuntimeError as e:
-        # Most likely: GROQ_API_KEY missing. Return retrieved context
-        # anyway so the frontend/dev can still see the RAG step working.
-        raise HTTPException(status_code=500, detail=str(e))
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+            tmp.write(await file.read())
+            tmp_path = tmp.name
 
-    sources = [ChatSource(type=c.doc_type, text=c.text) for c in chunks]
-    return ChatResponse(answer=answer, sources=sources)
+        # 2) نحوّل الصوت لنص
+        try:
+            transcript = transcribe_audio(tmp_path)
+        except Exception as e:
+            raise HTTPException(
+                status_code=500, detail=f"تعذر تحويل الصوت إلى نص: {e}"
+            )
+    finally:
+        if tmp_path and os.path.exists(tmp_path):
+            os.remove(tmp_path)
+
+    if not transcript.strip():
+        raise HTTPException(
+            status_code=400, detail="لم يتم التعرف على أي كلام في الملف الصوتي"
+        )
+
+    # 3) نفك history المبعوتة كـ JSON string (لو موجودة/سليمة)
+    try:
+        raw_history = json.loads(history) if history else []
+        history_turns = [HistoryTurn(**h) for h in raw_history]
+    except Exception:
+        history_turns = []
+
+    # 4) نفس منطق /api/chat بالظبط، لكن بالنص المستخرج من الصوت
+    result = _run_chat(transcript, history_turns)
+    return VoiceChatResponse(
+        answer=result.answer, sources=result.sources, transcript=transcript
+    )
 
 
 @app.get("/api/schools")
