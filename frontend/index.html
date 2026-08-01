@@ -1,18 +1,17 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>الرخصة — مساعد تعليم السواقة</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
 <style>
   :root {
-    /* ---- token system -------------------------------------------------
-       Palette inspired by Egyptian road signage (navy direction signs)
-       and license-plate / taxi reflective trim (gold + teal).
-       Cairo (display, named after the city itself) + Tajawal (body). */
     --bg: #0f1720;
     --bg-2: #131d29;
     --panel: #17222e;
@@ -20,22 +19,37 @@
     --border: #29394a;
     --text: #eef2f6;
     --muted: #8ea0b3;
-    --gold: #e8ab3d;      /* reflective plate / taxi trim */
+    --gold: #e8ab3d;
     --gold-dim: #b98a35;
-    --teal: #2fa79a;      /* route sign teal */
+    --teal: #2fa79a;
     --danger: #e2574c;
     --radius: 14px;
     --font-display: "Cairo", "Tajawal", sans-serif;
     --font-body: "Tajawal", "Cairo", sans-serif;
   }
-  * { box-sizing: border-box; }
-  html, body { height: 100%; }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
   body {
     margin: 0;
     font-family: var(--font-body);
     background:
-      radial-gradient(900px 500px at 85% -10%, rgba(47,167,154,0.10) 0%, transparent 60%),
-      radial-gradient(700px 400px at 10% 0%, rgba(232,171,61,0.08) 0%, transparent 55%),
+      radial-gradient(
+        900px 500px at 85% -10%,
+        rgba(47,167,154,0.10) 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        700px 400px at 10% 0%,
+        rgba(232,171,61,0.08) 0%,
+        transparent 55%
+      ),
       var(--bg);
     color: var(--text);
     display: flex;
@@ -43,37 +57,72 @@
     min-height: 100vh;
   }
 
-  /* ---- signature element: dashed road-line rule ---- */
+  /* ================= ROAD LINE ================= */
+
   .roadline {
     height: 3px;
     width: 100%;
     background-image: repeating-linear-gradient(
-      to left, var(--gold) 0 22px, transparent 22px 40px
+      to left,
+      var(--gold) 0 22px,
+      transparent 22px 40px
     );
     background-size: 200% 100%;
     animation: drive 1.4s linear 1;
   }
+
   @keyframes drive {
-    from { background-position: 0 0; }
-    to { background-position: -200% 0; }
+    from {
+      background-position: 0 0;
+    }
+
+    to {
+      background-position: -200% 0;
+    }
   }
+
   @media (prefers-reduced-motion: reduce) {
-    .roadline { animation: none; }
+    .roadline {
+      animation: none;
+    }
   }
+
+  /* ================= HEADER ================= */
 
   header {
     padding: 20px 28px 16px;
     background: linear-gradient(180deg, var(--bg-2), var(--bg));
     border-bottom: 1px solid var(--border);
   }
-  .header-row { display: flex; align-items: center; gap: 14px; max-width: 1180px; margin: 0 auto; }
-  .plate-icon {
-    width: 44px; height: 44px; flex-shrink: 0;
-    border-radius: 10px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
-    display: flex; align-items: center; justify-content: center;
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    max-width: 1180px;
+    margin: 0 auto;
   }
-  .plate-icon svg { width: 26px; height: 26px; }
+
+  .plate-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: linear-gradient(
+      135deg,
+      var(--gold),
+      var(--gold-dim)
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .plate-icon svg {
+    width: 26px;
+    height: 26px;
+  }
+
   header h1 {
     font-family: var(--font-display);
     font-weight: 800;
@@ -81,7 +130,14 @@
     margin: 0;
     letter-spacing: 0.01em;
   }
-  header p { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); }
+
+  header p {
+    margin: 2px 0 0;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  /* ================= TABS ================= */
 
   nav.tabs {
     max-width: 1180px;
@@ -93,6 +149,7 @@
     border-radius: 12px;
     padding: 4px;
   }
+
   nav.tabs button {
     flex: 1;
     border: none;
@@ -106,12 +163,18 @@
     cursor: pointer;
     transition: 0.15s;
   }
+
   nav.tabs button.active {
     background: var(--panel-2);
     color: var(--gold);
     box-shadow: inset 0 0 0 1px var(--border);
   }
-  nav.tabs button:not(.active):hover { color: var(--text); }
+
+  nav.tabs button:not(.active):hover {
+    color: var(--text);
+  }
+
+  /* ================= MAIN ================= */
 
   main {
     flex: 1;
@@ -123,11 +186,27 @@
     min-height: 0;
   }
 
-  .panel { display: none; width: 100%; min-height: 0; }
-  .panel.active { display: flex; flex-direction: column; }
+  .panel {
+    display: none;
+    width: 100%;
+    min-height: 0;
+  }
 
-  /* ================= CHAT PANEL ================= */
-  .chat-layout { display: grid; grid-template-columns: 250px 1fr; gap: 18px; flex: 1; min-height: 0; }
+  .panel.active {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ================= CHAT ================= */
+
+  .chat-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 18px;
+    flex: 1;
+    min-height: 0;
+  }
+
   aside.suggestions {
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -135,6 +214,7 @@
     background: var(--panel);
     height: fit-content;
   }
+
   aside.suggestions h2 {
     font-family: var(--font-display);
     font-size: 11.5px;
@@ -143,6 +223,7 @@
     color: var(--muted);
     margin: 0 0 10px;
   }
+
   .chip {
     display: block;
     width: 100%;
@@ -158,7 +239,11 @@
     font-family: var(--font-body);
     transition: 0.15s;
   }
-  .chip:hover { border-color: var(--gold); color: var(--gold); }
+
+  .chip:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
 
   .chat-window {
     display: flex;
@@ -168,6 +253,7 @@
     background: var(--panel);
     min-height: 0;
   }
+
   #messages {
     flex: 1;
     overflow-y: auto;
@@ -176,18 +262,68 @@
     flex-direction: column;
     gap: 12px;
   }
-  .msg { max-width: 78%; padding: 12px 16px; border-radius: 14px; line-height: 1.75; font-size: 14.5px; white-space: pre-wrap; }
-  .msg.user { align-self: flex-end; background: var(--panel-2); border-bottom-left-radius: 4px; }
-  .msg.bot { align-self: flex-start; background: var(--bg-2); border: 1px solid var(--border); border-bottom-right-radius: 4px; }
-  .msg.bot.error { border-color: #6b2723; background: #251616; }
-  .msg.bot .md-body p { margin: 0 0 8px; }
-  .msg.bot .md-body p:last-child { margin-bottom: 0; }
-  .msg.bot .md-body strong { color: var(--gold); font-weight: 700; }
-  .msg.bot .md-body ul, .msg.bot .md-body ol { margin: 4px 0 8px; padding-inline-start: 22px; }
-  .msg.bot .md-body li { margin: 3px 0; }
-  .msg.bot .md-body li::marker { color: var(--gold); }
 
-  .sources { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .msg {
+    max-width: 78%;
+    padding: 12px 16px;
+    border-radius: 14px;
+    line-height: 1.75;
+    font-size: 14.5px;
+    white-space: pre-wrap;
+  }
+
+  .msg.user {
+    align-self: flex-end;
+    background: var(--panel-2);
+    border-bottom-left-radius: 4px;
+  }
+
+  .msg.bot {
+    align-self: flex-start;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-bottom-right-radius: 4px;
+  }
+
+  .msg.bot.error {
+    border-color: #6b2723;
+    background: #251616;
+  }
+
+  .msg.bot .md-body p {
+    margin: 0 0 8px;
+  }
+
+  .msg.bot .md-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .msg.bot .md-body strong {
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .msg.bot .md-body ul,
+  .msg.bot .md-body ol {
+    margin: 4px 0 8px;
+    padding-inline-start: 22px;
+  }
+
+  .msg.bot .md-body li {
+    margin: 3px 0;
+  }
+
+  .msg.bot .md-body li::marker {
+    color: var(--gold);
+  }
+
+  .sources {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
   .source-card {
     font-size: 12px;
     color: var(--muted);
@@ -196,6 +332,7 @@
     border-radius: 8px;
     padding: 8px 10px;
   }
+
   .source-tag {
     display: inline-block;
     font-size: 10px;
@@ -208,377 +345,1561 @@
     font-weight: 700;
   }
 
-  form#composer { display: flex; gap: 10px; padding: 14px 16px 16px; border-top: 1px solid var(--border); }
+  /* ================= CHAT COMPOSER ================= */
+
+  form#composer {
+    display: flex;
+    gap: 10px;
+    padding: 14px 16px 16px;
+    border-top: 1px solid var(--border);
+  }
+
   #input {
-    flex: 1; background: var(--panel-2); border: 1px solid var(--border);
-    color: var(--text); border-radius: 12px; padding: 13px 16px; font-size: 14.5px;
-    font-family: var(--font-body); outline: none;
+    flex: 1;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 13px 16px;
+    font-size: 14.5px;
+    font-family: var(--font-body);
+    outline: none;
   }
-  #input:focus { border-color: var(--gold); }
+
+  #input:focus {
+    border-color: var(--gold);
+  }
+
+  /* ================= MICROPHONE BUTTON ================= */
+
+  button#mic {
+    width: 50px;
+    min-width: 50px;
+    border: 1px solid var(--border);
+    background: var(--panel-2);
+    color: var(--text);
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: 0.2s;
+    font-family: var(--font-body);
+  }
+
+  button#mic:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateY(-1px);
+  }
+
+  button#mic.recording {
+    background: var(--danger);
+    border-color: var(--danger);
+    color: white;
+    animation: pulse-mic 1s infinite;
+  }
+
+  button#mic:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @keyframes pulse-mic {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(226,87,76,0.4);
+    }
+
+    50% {
+      transform: scale(1.08);
+      box-shadow: 0 0 0 8px rgba(226,87,76,0);
+    }
+  }
+
   button#send {
-    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
-    border: none; color: #1a1204; font-weight: 800; font-family: var(--font-display);
-    padding: 0 22px; border-radius: 12px; cursor: pointer; font-size: 14px;
+    background: linear-gradient(
+      135deg,
+      var(--gold),
+      var(--gold-dim)
+    );
+    border: none;
+    color: #1a1204;
+    font-weight: 800;
+    font-family: var(--font-display);
+    padding: 0 22px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
   }
-  button#send:disabled { opacity: 0.55; cursor: not-allowed; }
 
-  .typing { display: flex; gap: 4px; padding: 6px 0; }
-  .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: blink 1.2s infinite ease-in-out; }
-  .typing span:nth-child(2) { animation-delay: 0.2s; }
-  .typing span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes blink { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
+  button#send:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
 
-  /* ================= DIRECTORY / CALCULATOR PANELS ================= */
+  /* ================= TYPING ================= */
+
+  .typing {
+    display: flex;
+    gap: 4px;
+    padding: 6px 0;
+  }
+
+  .typing span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    animation: blink 1.2s infinite ease-in-out;
+  }
+
+  .typing span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .typing span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes blink {
+    0%, 80%, 100% {
+      opacity: 0.2;
+    }
+
+    40% {
+      opacity: 1;
+    }
+  }
+
+  /* ================= DIRECTORY / CALCULATOR ================= */
+
   .toolbar {
-    display: flex; flex-wrap: wrap; gap: 10px;
-    background: var(--panel); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 14px; margin-bottom: 16px;
-  }
-  .toolbar select, .toolbar input {
-    flex: 1; min-width: 140px;
-    background: var(--panel-2); border: 1px solid var(--border);
-    color: var(--text); border-radius: 10px; padding: 10px 12px;
-    font-family: var(--font-body); font-size: 13.5px; outline: none;
-  }
-  .toolbar button {
-    background: linear-gradient(135deg, var(--teal), #1f7a70);
-    border: none; color: #06211d; font-weight: 800; font-family: var(--font-display);
-    padding: 0 20px; border-radius: 10px; cursor: pointer; font-size: 13.5px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 16px;
   }
 
-  .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+  .toolbar select,
+  .toolbar input {
+    flex: 1;
+    min-width: 140px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    outline: none;
+  }
+
+  .toolbar button {
+    background: linear-gradient(
+      135deg,
+      var(--teal),
+      #1f7a70
+    );
+    border: none;
+    color: #06211d;
+    font-weight: 800;
+    font-family: var(--font-display);
+    padding: 0 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13.5px;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(230px, 1fr)
+    );
+    gap: 12px;
+  }
+
   .card {
-    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
     padding: 14px 16px;
   }
-  .card .name { font-family: var(--font-display); font-weight: 700; font-size: 14.5px; margin-bottom: 6px; }
-  .card .meta { font-size: 12.5px; color: var(--muted); line-height: 1.7; }
+
+  .card .name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14.5px;
+    margin-bottom: 6px;
+  }
+
+  .card .meta {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
   .card a.call {
-    display: inline-block; margin-top: 10px; font-size: 12.5px;
-    color: var(--gold); text-decoration: none; border: 1px solid var(--gold-dim);
-    padding: 5px 12px; border-radius: 999px;
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: var(--gold);
+    text-decoration: none;
+    border: 1px solid var(--gold-dim);
+    padding: 5px 12px;
+    border-radius: 999px;
   }
-  .card a.call:hover { background: rgba(232,171,61,0.1); }
 
-  table.price-table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .card a.call:hover {
+    background: rgba(232,171,61,0.1);
+  }
+
+  table.price-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
   table.price-table th {
-    font-family: var(--font-display); font-size: 12px; text-transform: uppercase;
-    letter-spacing: 0.04em; color: var(--muted); background: var(--panel-2);
-    padding: 12px 14px; text-align: right; border-bottom: 1px solid var(--border);
+    font-family: var(--font-display);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    background: var(--panel-2);
+    padding: 12px 14px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
   }
-  table.price-table td { padding: 11px 14px; font-size: 13.5px; border-bottom: 1px solid var(--border); }
-  table.price-table tr:last-child td { border-bottom: none; }
-  table.price-table td.price { color: var(--gold); font-weight: 700; font-family: var(--font-display); }
 
-  .empty-state { color: var(--muted); font-size: 13.5px; padding: 30px 10px; text-align: center; }
+  table.price-table td {
+    padding: 11px 14px;
+    font-size: 13.5px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  table.price-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  table.price-table td.price {
+    color: var(--gold);
+    font-weight: 700;
+    font-family: var(--font-display);
+  }
+
+  .empty-state {
+    color: var(--muted);
+    font-size: 13.5px;
+    padding: 30px 10px;
+    text-align: center;
+  }
+
+  /* ================= MOBILE ================= */
 
   @media (max-width: 780px) {
-    .chat-layout { grid-template-columns: 1fr; }
-    aside.suggestions { display: none; }
-    main { padding: 16px; }
+    .chat-layout {
+      grid-template-columns: 1fr;
+    }
+
+    aside.suggestions {
+      display: none;
+    }
+
+    main {
+      padding: 16px;
+    }
+
+    form#composer {
+      gap: 7px;
+      padding: 10px;
+    }
+
+    #input {
+      min-width: 0;
+      padding: 11px 12px;
+    }
+
+    button#mic {
+      width: 45px;
+      min-width: 45px;
+    }
+
+    button#send {
+      padding: 0 15px;
+    }
   }
 </style>
 </head>
+
 <body>
 
 <div class="roadline"></div>
+
 <header>
   <div class="header-row">
+
     <div class="plate-icon">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3 16L5.2 8.6C5.6 7.3 6.8 6.4 8.2 6.4H15.8C17.2 6.4 18.4 7.3 18.8 8.6L21 16" stroke="#1a1204" stroke-width="1.8" stroke-linecap="round"/>
-        <rect x="2.5" y="15.5" width="19" height="4.5" rx="1.4" stroke="#1a1204" stroke-width="1.8"/>
-        <circle cx="6.5" cy="20" r="1.3" fill="#1a1204"/>
-        <circle cx="17.5" cy="20" r="1.3" fill="#1a1204"/>
-        <path d="M7 11H17" stroke="#1a1204" stroke-width="1.6" stroke-linecap="round"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M3 16L5.2 8.6C5.6 7.3 6.8 6.4 8.2 6.4H15.8C17.2 6.4 18.4 7.3 18.8 8.6L21 16"
+          stroke="#1a1204"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+
+        <rect
+          x="2.5"
+          y="15.5"
+          width="19"
+          height="4.5"
+          rx="1.4"
+          stroke="#1a1204"
+          stroke-width="1.8"
+        />
+
+        <circle
+          cx="6.5"
+          cy="20"
+          r="1.3"
+          fill="#1a1204"
+        />
+
+        <circle
+          cx="17.5"
+          cy="20"
+          r="1.3"
+          fill="#1a1204"
+        />
+
+        <path
+          d="M7 11H17"
+          stroke="#1a1204"
+          stroke-width="1.6"
+          stroke-linecap="round"
+        />
       </svg>
     </div>
+
     <div>
       <h1>الرخصة — مساعد تعليم السواقة</h1>
-      <p>رخص القيادة · دليل المدربين · حاسبة الصيانة — RAG + Groq (Llama 3.3)</p>
+      <p>
+        رخص القيادة · دليل المدربين · حاسبة الصيانة — RAG + Groq (Llama 3.3)
+      </p>
     </div>
+
   </div>
+
   <nav class="tabs">
-    <button class="tab-btn active" data-tab="chat">المحادثة</button>
-    <button class="tab-btn" data-tab="directory">دليل المدربين</button>
-    <button class="tab-btn" data-tab="calculator">حاسبة الصيانة</button>
+    <button
+      class="tab-btn active"
+      data-tab="chat"
+    >
+      المحادثة
+    </button>
+
+    <button
+      class="tab-btn"
+      data-tab="directory"
+    >
+      دليل المدربين
+    </button>
+
+    <button
+      class="tab-btn"
+      data-tab="calculator"
+    >
+      حاسبة الصيانة
+    </button>
   </nav>
 </header>
 
 <main>
 
   <!-- ================= CHAT ================= -->
-  <section id="panel-chat" class="panel active">
+
+  <section
+    id="panel-chat"
+    class="panel active"
+  >
+
     <div class="chat-layout">
+
       <aside class="suggestions">
+
         <h2>أسئلة سريعة</h2>
-        <button class="chip">إيه شروط استخراج رخصة قيادة أول مرة؟</button>
-        <button class="chip">إيه هي خطوات الاختبار العملي؟</button>
-        <button class="chip">فيه مدرب سواقة في الهرم؟</button>
-        <button class="chip">سعر تغيير زيت المحرك لسيارة 1600 في القاهرة؟</button>
-        <button class="chip">لو رسبت في الاختبار، أعيده امتى؟</button>
-        <h2 style="margin-top:18px;">عن المساعد</h2>
-        <p style="font-size:12px; color:var(--muted); line-height:1.8;">
+
+        <button class="chip">
+          إيه شروط استخراج رخصة قيادة أول مرة؟
+        </button>
+
+        <button class="chip">
+          إيه هي خطوات الاختبار العملي؟
+        </button>
+
+        <button class="chip">
+          فيه مدرب سواقة في الهرم؟
+        </button>
+
+        <button class="chip">
+          سعر تغيير زيت المحرك لسيارة 1600 في القاهرة؟
+        </button>
+
+        <button class="chip">
+          لو رسبت في الاختبار، أعيده امتى؟
+        </button>
+
+        <h2 style="margin-top:18px;">
+          عن المساعد
+        </h2>
+
+        <p
+          style="
+            font-size:12px;
+            color:var(--muted);
+            line-height:1.8;
+          "
+        >
           يبحث في قاعدة معرفة عن إجراءات الرخصة، المدربين، والصيانة، ثم
           يصيغ Groq إجابة دقيقة بناءً على ما تم استرجاعه فقط. المحادثة
           تتذكر آخر أسئلتك.
         </p>
+
       </aside>
 
       <div class="chat-window">
+
         <div id="messages">
+
           <div class="msg bot">
             أهلاً! أنا مساعدك في كل ما يخص تعليم السواقة في مصر: شروط الرخصة،
             إجراءات الاختبار، مدربين السواقة، وأسعار صيانة السيارات. اسألني
             أي سؤال 🚦
           </div>
+
         </div>
+
+        <!-- CHAT INPUT -->
+
         <form id="composer">
-          <input id="input" type="text" placeholder="اكتب سؤالك هنا..." autocomplete="off" />
-          <button id="send" type="submit">إرسال</button>
+
+          <input
+            id="input"
+            type="text"
+            placeholder="اكتب سؤالك هنا..."
+            autocomplete="off"
+          />
+
+          <!-- MICROPHONE -->
+
+          <button
+            id="mic"
+            type="button"
+            title="تحدث"
+            aria-label="التحدث"
+          >
+            🎤
+          </button>
+
+          <button
+            id="send"
+            type="submit"
+          >
+            إرسال
+          </button>
+
         </form>
+
       </div>
+
     </div>
+
   </section>
 
   <!-- ================= DIRECTORY ================= -->
-  <section id="panel-directory" class="panel">
+
+  <section
+    id="panel-directory"
+    class="panel"
+  >
+
     <div class="toolbar">
-      <select id="dir-governorate"><option value="">كل المحافظات</option></select>
-      <select id="dir-area"><option value="">كل المناطق</option></select>
-      <button id="dir-search">بحث</button>
+
+      <select id="dir-governorate">
+        <option value="">كل المحافظات</option>
+      </select>
+
+      <select id="dir-area">
+        <option value="">كل المناطق</option>
+      </select>
+
+      <button id="dir-search">
+        بحث
+      </button>
+
     </div>
+
     <div id="dir-results" class="results-grid"></div>
+
   </section>
 
   <!-- ================= CALCULATOR ================= -->
-  <section id="panel-calculator" class="panel">
+
+  <section
+    id="panel-calculator"
+    class="panel"
+  >
+
     <div class="toolbar">
-      <select id="calc-cc"><option value="">كل السعات</option></select>
-      <select id="calc-service"><option value="">كل الخدمات</option></select>
-      <select id="calc-city"><option value="">كل المدن</option></select>
-      <button id="calc-search">بحث</button>
+
+      <select id="calc-cc">
+        <option value="">كل السعات</option>
+      </select>
+
+      <select id="calc-service">
+        <option value="">كل الخدمات</option>
+      </select>
+
+      <select id="calc-city">
+        <option value="">كل المدن</option>
+      </select>
+
+      <button id="calc-search">
+        بحث
+      </button>
+
     </div>
+
     <div id="calc-results"></div>
+
   </section>
 
 </main>
 
 <script>
+
   const API_BASE = "";
-  let history = []; // {role, content} pairs kept client-side for multi-turn memory
 
-  // ---------------- Tabs ----------------
-  document.querySelectorAll(".tab-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-      document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
-      btn.classList.add("active");
-      document.getElementById("panel-" + btn.dataset.tab).classList.add("active");
+  let history = [];
+
+  /* ================= TABS ================= */
+
+  document
+    .querySelectorAll(".tab-btn")
+    .forEach(btn => {
+
+      btn.addEventListener("click", () => {
+
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach(b =>
+            b.classList.remove("active")
+          );
+
+        document
+          .querySelectorAll(".panel")
+          .forEach(p =>
+            p.classList.remove("active")
+          );
+
+        btn.classList.add("active");
+
+        document
+          .getElementById(
+            "panel-" + btn.dataset.tab
+          )
+          .classList.add("active");
+
+      });
+
     });
-  });
 
-  // ---------------- Chat ----------------
-  const messagesEl = document.getElementById("messages");
-  const form = document.getElementById("composer");
-  const input = document.getElementById("input");
-  const sendBtn = document.getElementById("send");
 
-  // Very small Markdown renderer: escapes HTML first, then supports
-  // **bold**, "- " / "1. " lists, and paragraphs separated by blank lines.
-  // Kept intentionally minimal (no external library) since the bot only
-  // ever emits a small, predictable subset of Markdown.
+  /* ================= CHAT ================= */
+
+  const messagesEl =
+    document.getElementById("messages");
+
+  const form =
+    document.getElementById("composer");
+
+  const input =
+    document.getElementById("input");
+
+  const sendBtn =
+    document.getElementById("send");
+
+
+  /* ================= SPEECH RECOGNITION ================= */
+
+  const micBtn =
+    document.getElementById("mic");
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  let recognition = null;
+
+  let isRecording = false;
+
+
+  if (SpeechRecognition) {
+
+    recognition =
+      new SpeechRecognition();
+
+    /*
+      Arabic - Egypt
+
+      This tells the browser that we expect
+      Egyptian Arabic speech.
+    */
+
+    recognition.lang = "ar-EG";
+
+    /*
+      Stop automatically when the user
+      finishes speaking.
+    */
+
+    recognition.continuous = false;
+
+    /*
+      Show results while the user is speaking.
+    */
+
+    recognition.interimResults = true;
+
+
+    /* ================= RECORDING START ================= */
+
+    recognition.onstart = () => {
+
+      isRecording = true;
+
+      micBtn.classList.add("recording");
+
+      micBtn.textContent = "⏹️";
+
+      micBtn.title = "إيقاف التسجيل";
+
+    };
+
+
+    /* ================= SPEECH RESULT ================= */
+
+    recognition.onresult = (event) => {
+
+      let transcript = "";
+
+      for (
+        let i = event.resultIndex;
+        i < event.results.length;
+        i++
+      ) {
+
+        transcript +=
+          event.results[i][0].transcript;
+
+      }
+
+      /*
+        Put the recognized speech
+        directly inside the chat input.
+      */
+
+      input.value = transcript;
+
+    };
+
+
+    /* ================= RECORDING END ================= */
+
+    recognition.onend = () => {
+
+      isRecording = false;
+
+      micBtn.classList.remove("recording");
+
+      micBtn.textContent = "🎤";
+
+      micBtn.title = "تحدث";
+
+    };
+
+
+    /* ================= ERROR ================= */
+
+    recognition.onerror = (event) => {
+
+      console.error(
+        "Speech recognition error:",
+        event.error
+      );
+
+      isRecording = false;
+
+      micBtn.classList.remove("recording");
+
+      micBtn.textContent = "🎤";
+
+      micBtn.title = "تحدث";
+
+
+      if (event.error === "not-allowed") {
+
+        alert(
+          "من فضلك اسمح للموقع باستخدام الميكروفون."
+        );
+
+      }
+
+      else if (event.error === "no-speech") {
+
+        console.log(
+          "لم يتم اكتشاف كلام."
+        );
+
+      }
+
+    };
+
+
+    /* ================= MICROPHONE CLICK ================= */
+
+    micBtn.addEventListener(
+      "click",
+      () => {
+
+        if (isRecording) {
+
+          /*
+            Stop recording
+          */
+
+          recognition.stop();
+
+        }
+
+        else {
+
+          /*
+            Start recording
+          */
+
+          try {
+
+            recognition.start();
+
+          }
+
+          catch (error) {
+
+            console.error(
+              "Could not start speech recognition:",
+              error
+            );
+
+          }
+
+        }
+
+      }
+    );
+
+  }
+
+  else {
+
+    /*
+      Browser does not support
+      Speech Recognition.
+    */
+
+    micBtn.disabled = true;
+
+    micBtn.textContent = "🚫";
+
+    micBtn.title =
+      "المتصفح لا يدعم التعرف على الكلام";
+
+  }
+
+
+  /* ================= MARKDOWN ================= */
+
   function renderMarkdown(text) {
+
     const escapeHtml = (s) =>
-      s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      s
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
 
     const applyInline = (s) =>
-      escapeHtml(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      escapeHtml(s)
+        .replace(
+          /\*\*(.+?)\*\*/g,
+          "<strong>$1</strong>"
+        );
 
-    const blocks = text.trim().split(/\n\s*\n/);
+
+    const blocks =
+      text
+        .trim()
+        .split(/\n\s*\n/);
+
+
     let html = "";
+
+
     for (const block of blocks) {
-      const lines = block.split("\n").map((l) => l.trim()).filter(Boolean);
-      const isBullet = lines.every((l) => /^[-*•]\s+/.test(l));
-      const isNumbered = lines.every((l) => /^\d+[.)]\s+/.test(l));
+
+      const lines =
+        block
+          .split("\n")
+          .map(l => l.trim())
+          .filter(Boolean);
+
+
+      const isBullet =
+        lines.every(
+          l => /^[-*•]\s+/.test(l)
+        );
+
+
+      const isNumbered =
+        lines.every(
+          l => /^\d+[.)]\s+/.test(l)
+        );
+
 
       if (isBullet && lines.length) {
-        html += "<ul>" + lines.map((l) => `<li>${applyInline(l.replace(/^[-*•]\s+/, ""))}</li>`).join("") + "</ul>";
-      } else if (isNumbered && lines.length) {
-        html += "<ol>" + lines.map((l) => `<li>${applyInline(l.replace(/^\d+[.)]\s+/, ""))}</li>`).join("") + "</ol>";
-      } else {
-        html += `<p>${applyInline(lines.join(" "))}</p>`;
+
+        html +=
+          "<ul>" +
+          lines
+            .map(
+              l =>
+                `<li>${applyInline(
+                  l.replace(
+                    /^[-*•]\s+/,
+                    ""
+                  )
+                )}</li>`
+            )
+            .join("") +
+          "</ul>";
+
       }
+
+      else if (
+        isNumbered &&
+        lines.length
+      ) {
+
+        html +=
+          "<ol>" +
+          lines
+            .map(
+              l =>
+                `<li>${applyInline(
+                  l.replace(
+                    /^\d+[.)]\s+/,
+                    ""
+                  )
+                )}</li>`
+            )
+            .join("") +
+          "</ol>";
+
+      }
+
+      else {
+
+        html +=
+          `<p>${applyInline(
+            lines.join(" ")
+          )}</p>`;
+
+      }
+
     }
+
+
     return html;
+
   }
 
-  function addMessage(text, role, sources) {
-    const div = document.createElement("div");
-    div.className = "msg " + role;
+
+  /* ================= ADD MESSAGE ================= */
+
+  function addMessage(
+    text,
+    role,
+    sources
+  ) {
+
+    const div =
+      document.createElement("div");
+
+    div.className =
+      "msg " + role;
+
+
     if (role === "user") {
+
       div.textContent = text;
-    } else {
-      const body = document.createElement("div");
-      body.className = "md-body";
-      body.innerHTML = renderMarkdown(text);
+
+    }
+
+    else {
+
+      const body =
+        document.createElement("div");
+
+      body.className =
+        "md-body";
+
+      body.innerHTML =
+        renderMarkdown(text);
+
       div.appendChild(body);
+
     }
-    if (sources && sources.length) {
-      const wrap = document.createElement("div");
-      wrap.className = "sources";
-      sources.slice(0, 4).forEach(s => {
-        const card = document.createElement("div");
-        card.className = "source-card";
-      });
+
+
+    if (
+      sources &&
+      sources.length
+    ) {
+
+      const wrap =
+        document.createElement("div");
+
+      wrap.className =
+        "sources";
+
+
+      sources
+        .slice(0, 4)
+        .forEach(s => {
+
+          const card =
+            document.createElement("div");
+
+          card.className =
+            "source-card";
+
+
+          card.textContent =
+            s.text ||
+            s.content ||
+            JSON.stringify(s);
+
+
+          wrap.appendChild(card);
+
+        });
+
+
       div.appendChild(wrap);
+
     }
+
+
     messagesEl.appendChild(div);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
+
+    messagesEl.scrollTop =
+      messagesEl.scrollHeight;
+
   }
+
+
+  /* ================= TYPING ================= */
 
   function addTyping() {
-    const div = document.createElement("div");
-    div.className = "msg bot";
-    div.id = "typing-indicator";
-    div.innerHTML = `<div class="typing"><span></span><span></span><span></span></div>`;
+
+    const div =
+      document.createElement("div");
+
+    div.className =
+      "msg bot";
+
+    div.id =
+      "typing-indicator";
+
+    div.innerHTML =
+      `
+        <div class="typing">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      `;
+
     messagesEl.appendChild(div);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
+
+    messagesEl.scrollTop =
+      messagesEl.scrollHeight;
+
   }
+
+
   function removeTyping() {
-    const el = document.getElementById("typing-indicator");
-    if (el) el.remove();
+
+    const el =
+      document.getElementById(
+        "typing-indicator"
+      );
+
+    if (el) {
+
+      el.remove();
+
+    }
+
   }
+
+
+  /* ================= SEND MESSAGE ================= */
 
   async function sendMessage(text) {
-    addMessage(text, "user");
+
+    addMessage(
+      text,
+      "user"
+    );
+
     input.value = "";
+
     sendBtn.disabled = true;
+
     addTyping();
 
+
     try {
-      const res = await fetch(`${API_BASE}/api/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, history }),
-      });
-      const data = await res.json();
+
+      const res =
+        await fetch(
+          `${API_BASE}/api/chat`,
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+              message: text,
+              history: history
+            })
+
+          }
+        );
+
+
+      const data =
+        await res.json();
+
       removeTyping();
+
 
       if (!res.ok) {
-        addMessage(data.detail || "حدث خطأ أثناء الاتصال بالخادم.", "bot error");
-      } else {
-        addMessage(data.answer, "bot", data.sources);
-        history.push({ role: "user", content: text });
-        history.push({ role: "assistant", content: data.answer });
+
+        addMessage(
+          data.detail ||
+          "حدث خطأ أثناء الاتصال بالخادم.",
+          "bot error"
+        );
+
       }
-    } catch (err) {
-      removeTyping();
-      addMessage("تعذّر الاتصال بالخادم. تأكد أن الـ backend شغال.", "bot error");
-    } finally {
-      sendBtn.disabled = false;
+
+      else {
+
+        addMessage(
+          data.answer,
+          "bot",
+          data.sources
+        );
+
+
+        history.push({
+          role: "user",
+          content: text
+        });
+
+
+        history.push({
+          role: "assistant",
+          content: data.answer
+        });
+
+      }
+
     }
+
+    catch (err) {
+
+      console.error(err);
+
+      removeTyping();
+
+      addMessage(
+        "تعذّر الاتصال بالخادم. تأكد أن الـ backend شغال.",
+        "bot error"
+      );
+
+    }
+
+    finally {
+
+      sendBtn.disabled = false;
+
+      input.focus();
+
+    }
+
   }
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const text = input.value.trim();
-    if (text) sendMessage(text);
-  });
-  document.querySelectorAll(".chip").forEach(chip => {
-    chip.addEventListener("click", () => sendMessage(chip.textContent.trim()));
-  });
 
-  // ---------------- Filters (shared dropdown data) ----------------
-  function fillSelect(select, values, placeholder) {
-    select.innerHTML = `<option value="">${placeholder}</option>` +
-      values.map(v => `<option value="${v}">${v}</option>`).join("");
+  /* ================= FORM SUBMIT ================= */
+
+  form.addEventListener(
+    "submit",
+    (e) => {
+
+      e.preventDefault();
+
+      const text =
+        input.value.trim();
+
+      if (text) {
+
+        sendMessage(text);
+
+      }
+
+    }
+  );
+
+
+  /* ================= QUICK QUESTIONS ================= */
+
+  document
+    .querySelectorAll(".chip")
+    .forEach(chip => {
+
+      chip.addEventListener(
+        "click",
+        () => {
+
+          sendMessage(
+            chip.textContent.trim()
+          );
+
+        }
+      );
+
+    });
+
+
+  /* ================= FILTERS ================= */
+
+  function fillSelect(
+    select,
+    values,
+    placeholder
+  ) {
+
+    select.innerHTML =
+      `<option value="">
+        ${placeholder}
+      </option>` +
+      values
+        .map(
+          v =>
+            `<option value="${v}">
+              ${v}
+            </option>`
+        )
+        .join("");
+
   }
+
 
   async function loadFilters() {
+
     try {
-      const res = await fetch(`${API_BASE}/api/filters`);
-      const data = await res.json();
-      fillSelect(document.getElementById("dir-governorate"), data.governorates, "كل المحافظات");
-      fillSelect(document.getElementById("dir-area"), data.areas, "كل المناطق");
-      fillSelect(document.getElementById("calc-cc"), data.engine_ccs, "كل السعات");
-      fillSelect(document.getElementById("calc-service"), data.service_types, "كل الخدمات");
-      fillSelect(document.getElementById("calc-city"), data.cities, "كل المدن");
-    } catch (err) {
-      console.error("failed to load filters", err);
+
+      const res =
+        await fetch(
+          `${API_BASE}/api/filters`
+        );
+
+      const data =
+        await res.json();
+
+
+      fillSelect(
+        document.getElementById(
+          "dir-governorate"
+        ),
+        data.governorates,
+        "كل المحافظات"
+      );
+
+
+      fillSelect(
+        document.getElementById(
+          "dir-area"
+        ),
+        data.areas,
+        "كل المناطق"
+      );
+
+
+      fillSelect(
+        document.getElementById(
+          "calc-cc"
+        ),
+        data.engine_ccs,
+        "كل السعات"
+      );
+
+
+      fillSelect(
+        document.getElementById(
+          "calc-service"
+        ),
+        data.service_types,
+        "كل الخدمات"
+      );
+
+
+      fillSelect(
+        document.getElementById(
+          "calc-city"
+        ),
+        data.cities,
+        "كل المدن"
+      );
+
     }
+
+    catch (err) {
+
+      console.error(
+        "failed to load filters",
+        err
+      );
+
+    }
+
   }
+
+
   loadFilters();
 
-  // ---------------- Directory ----------------
+
+  /* ================= DIRECTORY ================= */
+
   async function searchDirectory() {
-    const governorate = document.getElementById("dir-governorate").value;
-    const area = document.getElementById("dir-area").value;
-    const params = new URLSearchParams({ governorate, area });
-    const resultsEl = document.getElementById("dir-results");
-    resultsEl.innerHTML = `<div class="empty-state">جارِ البحث...</div>`;
 
-    try {
-      const res = await fetch(`${API_BASE}/api/schools?${params}`);
-      const data = await res.json();
-      if (!data.length) {
-        resultsEl.innerHTML = `<div class="empty-state">مفيش نتائج مطابقة. جرّب تغيير الفلاتر.</div>`;
-        return;
-      }
-      resultsEl.innerHTML = data.map(s => `
-        <div class="card">
-          <div class="name">${s.name}</div>
-          <div class="meta">📍 ${s.area} — ${s.governorate}</div>
-          <a class="call" href="tel:${s.phone}">📞 ${s.phone}</a>
+    const governorate =
+      document.getElementById(
+        "dir-governorate"
+      ).value;
+
+
+    const area =
+      document.getElementById(
+        "dir-area"
+      ).value;
+
+
+    const params =
+      new URLSearchParams({
+        governorate,
+        area
+      });
+
+
+    const resultsEl =
+      document.getElementById(
+        "dir-results"
+      );
+
+
+    resultsEl.innerHTML =
+      `
+        <div class="empty-state">
+          جارِ البحث...
         </div>
-      `).join("");
-    } catch (err) {
-      resultsEl.innerHTML = `<div class="empty-state">تعذّر الاتصال بالخادم.</div>`;
-    }
-  }
-  document.getElementById("dir-search").addEventListener("click", searchDirectory);
+      `;
 
-  // ---------------- Maintenance calculator ----------------
-  async function searchMaintenance() {
-    const engine_cc = document.getElementById("calc-cc").value;
-    const service_type = document.getElementById("calc-service").value;
-    const city = document.getElementById("calc-city").value;
-    const params = new URLSearchParams({ engine_cc, service_type, city });
-    const resultsEl = document.getElementById("calc-results");
-    resultsEl.innerHTML = `<div class="empty-state">جارِ البحث...</div>`;
 
     try {
-      const res = await fetch(`${API_BASE}/api/maintenance?${params}`);
-      const data = await res.json();
+
+      const res =
+        await fetch(
+          `${API_BASE}/api/schools?${params}`
+        );
+
+
+      const data =
+        await res.json();
+
+
       if (!data.length) {
-        resultsEl.innerHTML = `<div class="empty-state">مفيش نتائج مطابقة. جرّب تغيير الفلاتر.</div>`;
+
+        resultsEl.innerHTML =
+          `
+            <div class="empty-state">
+              مفيش نتائج مطابقة.
+              جرّب تغيير الفلاتر.
+            </div>
+          `;
+
         return;
+
       }
-      const rows = data.slice(0, 100).map(m => `
-        <tr>
-          <td>${m.service_type}</td>
-          <td>${m.engine_cc} سي سي</td>
-          <td>${m.interval_km} كم</td>
-          <td class="price">${m.estimated_price_egp} ج.م</td>
-          <td>${m.service_center_type}</td>
-          <td>${m.city}</td>
-        </tr>
-      `).join("");
-      resultsEl.innerHTML = `
-        <table class="price-table">
-          <thead><tr>
-            <th>الخدمة</th><th>السعة</th><th>كل</th><th>السعر التقريبي</th><th>نوع المركز</th><th>المدينة</th>
-          </tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-        ${data.length > 100 ? `<div class="empty-state">تم عرض 100 من ${data.length} نتيجة — ضيّق الفلاتر لعرض أدق.</div>` : ""}
-      `;
-    } catch (err) {
-      resultsEl.innerHTML = `<div class="empty-state">تعذّر الاتصال بالخادم.</div>`;
+
+
+      resultsEl.innerHTML =
+        data
+          .map(
+            s => `
+              <div class="card">
+
+                <div class="name">
+                  ${s.name}
+                </div>
+
+                <div class="meta">
+                  📍 ${s.area}
+                  —
+                  ${s.governorate}
+                </div>
+
+                <a
+                  class="call"
+                  href="tel:${s.phone}"
+                >
+                  📞 ${s.phone}
+                </a>
+
+              </div>
+            `
+          )
+          .join("");
+
     }
+
+    catch (err) {
+
+      resultsEl.innerHTML =
+        `
+          <div class="empty-state">
+            تعذّر الاتصال بالخادم.
+          </div>
+        `;
+
+    }
+
   }
-  document.getElementById("calc-search").addEventListener("click", searchMaintenance);
+
+
+  document
+    .getElementById("dir-search")
+    .addEventListener(
+      "click",
+      searchDirectory
+    );
+
+
+  /* ================= MAINTENANCE ================= */
+
+  async function searchMaintenance() {
+
+    const engine_cc =
+      document.getElementById(
+        "calc-cc"
+      ).value;
+
+
+    const service_type =
+      document.getElementById(
+        "calc-service"
+      ).value;
+
+
+    const city =
+      document.getElementById(
+        "calc-city"
+      ).value;
+
+
+    const params =
+      new URLSearchParams({
+        engine_cc,
+        service_type,
+        city
+      });
+
+
+    const resultsEl =
+      document.getElementById(
+        "calc-results"
+      );
+
+
+    resultsEl.innerHTML =
+      `
+        <div class="empty-state">
+          جارِ البحث...
+        </div>
+      `;
+
+
+    try {
+
+      const res =
+        await fetch(
+          `${API_BASE}/api/maintenance?${params}`
+        );
+
+
+      const data =
+        await res.json();
+
+
+      if (!data.length) {
+
+        resultsEl.innerHTML =
+          `
+            <div class="empty-state">
+              مفيش نتائج مطابقة.
+              جرّب تغيير الفلاتر.
+            </div>
+          `;
+
+        return;
+
+      }
+
+
+      const rows =
+        data
+          .slice(0, 100)
+          .map(
+            m => `
+              <tr>
+
+                <td>
+                  ${m.service_type}
+                </td>
+
+                <td>
+                  ${m.engine_cc} سي سي
+                </td>
+
+                <td>
+                  ${m.interval_km} كم
+                </td>
+
+                <td class="price">
+                  ${m.estimated_price_egp} ج.م
+                </td>
+
+                <td>
+                  ${m.service_center_type}
+                </td>
+
+                <td>
+                  ${m.city}
+                </td>
+
+              </tr>
+            `
+          )
+          .join("");
+
+
+      resultsEl.innerHTML =
+        `
+          <table class="price-table">
+
+            <thead>
+
+              <tr>
+                <th>الخدمة</th>
+                <th>السعة</th>
+                <th>كل</th>
+                <th>السعر التقريبي</th>
+                <th>نوع المركز</th>
+                <th>المدينة</th>
+              </tr>
+
+            </thead>
+
+            <tbody>
+              ${rows}
+            </tbody>
+
+          </table>
+
+          ${
+            data.length > 100
+              ? `
+                <div class="empty-state">
+                  تم عرض 100 من
+                  ${data.length}
+                  نتيجة — ضيّق الفلاتر لعرض أدق.
+                </div>
+              `
+              : ""
+          }
+        `;
+
+    }
+
+    catch (err) {
+
+      resultsEl.innerHTML =
+        `
+          <div class="empty-state">
+            تعذّر الاتصال بالخادم.
+          </div>
+        `;
+
+    }
+
+  }
+
+
+  document
+    .getElementById("calc-search")
+    .addEventListener(
+      "click",
+      searchMaintenance
+    );
+
 </script>
 
 </body>
 </html>
+```
