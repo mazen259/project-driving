@@ -28,3 +28,5 @@ Thumbs.db
 
 # ==== Node (لو الفرونت اتحول لبناء عن طريق npm/vite لاحقًا) ====
 node_modules/
+
+*__pycache__*
